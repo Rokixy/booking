@@ -1,29 +1,67 @@
 <template>
   <div class="numberPad">
-    <div class="output">100</div>
+    <div class="output">{{ output }}</div>
     <div class="buttons">
-      <button>1</button>
-      <button>2</button>
-      <button>3</button>
-      <button>删除</button>
-      <button>4</button>
-      <button>5</button>
-      <button>6</button>
-      <button>清空</button>
-      <button>7</button>
-      <button>8</button>
-      <button>9</button>
-      <button class="ok">OK</button>
-      <button class="zero">0</button>
-      <button>.</button>
+      <button @click="addContent">1</button>
+      <button @click="addContent">2</button>
+      <button @click="addContent">3</button>
+      <button @click="backSpace">删除</button>
+      <button @click="addContent">4</button>
+      <button @click="addContent">5</button>
+      <button @click="addContent">6</button>
+      <button @click="clear">清空</button>
+      <button @click="addContent">7</button>
+      <button @click="addContent">8</button>
+      <button @click="addContent">9</button>
+      <button @click="ok" class="ok">OK</button>
+      <button @click="addContent" class="zero">0</button>
+      <button @click="addContent">.</button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-export default {
-  name: "NumberPad",
-};
+import { Vue } from "vue-class-component";
+
+export default class NumberPad extends Vue {
+  output = "0";
+  addContent(event: MouseEvent) {
+    const button = event.target as HTMLButtonElement;
+    const input = button.textContent!;
+
+    if (this.output.length === 16) {
+      return;
+    }
+    if (this.output === "0") {
+      if ("0123456789".indexOf(input) >= 0) {
+        this.output = input;
+      } else {
+        this.output += input;
+      }
+    } else {
+      if (this.output.indexOf(".") >= 0 && input === ".") {
+        return;
+      }
+      this.output += input;
+    }
+  }
+
+  clear() {
+    this.output = "0";
+  }
+
+  backSpace() {
+    if (this.output.length === 1) {
+      this.output = "0";
+    } else {
+      this.output = this.output.slice(0, -1);
+    }
+  }
+
+  ok() {
+    return;
+  }
+}
 </script>
 
 <style lang="scss" scoped>
