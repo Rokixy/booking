@@ -1,55 +1,46 @@
 <template>
   <div class="tags">
     <ul class="current">
-      <li>衣</li>
-      <li>食</li>
-      <li>住</li>
-      <li>行</li>
-      <li>衣</li>
-      <li>食</li>
-      <li>住</li>
-      <li>行</li>
-      <li>衣</li>
-      <li>食</li>
-      <li>住</li>
-      <li>行</li>
-      <li>衣</li>
-      <li>食</li>
-      <li>住</li>
-      <li>行</li>
-      <li>衣</li>
-      <li>食</li>
-      <li>住</li>
-      <li>行</li>
-      <li>衣</li>
-      <li>食</li>
-      <li>住</li>
-      <li>行</li>
-      <li>衣</li>
-      <li>食</li>
-      <li>住</li>
-      <li>行</li>
-      <li>衣</li>
-      <li>食</li>
-      <li>住</li>
-      <li>行</li>
-      <li>衣</li>
-      <li>食</li>
-      <li>住</li>
-      <li>行</li>
-      <li>衣</li>
-      <li>食</li>
-      <li>住</li>
-      <li>行</li>
-      <li class="new">+</li>
+      <li
+        v-for="tag in dataSource"
+        :key="tag"
+        :class="{ selected: tag === selectedTag }"
+        @click="select(tag)"
+      >
+        {{ tag }}
+      </li>
+      <li class="new" @click="create">+</li>
     </ul>
   </div>
 </template>
 
 <script lang="ts">
-export default {
-  name: "Tags",
-};
+import { Vue } from "vue-class-component";
+import { Prop } from "vue-property-decorator";
+
+export default class Tags extends Vue {
+  @Prop(Array) dataSource: string[] | undefined;
+  selectedTag = "";
+  select(tag: string) {
+    if (tag === this.selectedTag) {
+      return;
+    } else {
+      this.selectedTag = tag;
+    }
+  }
+  create() {
+    const name = window.prompt("请输入标签名");
+    if (name === "") {
+      window.alert("标签名不能为空");
+    } else if (this.dataSource) {
+      if (this.dataSource?.indexOf(name as string) >= 0) {
+        window.alert("此标签名已存在");
+      } else {
+        this.$emit("update:dataSource", [...this.dataSource, name]);
+      }
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -66,7 +57,8 @@ export default {
     flex-wrap: wrap;
     margin-right: -5px;
     > li {
-      background: #d9d9d9;
+      $bg: #d9d9d9;
+      background: $bg;
       $h: 24px;
       height: $h;
       line-height: $h;
@@ -76,6 +68,10 @@ export default {
       margin-top: 4px;
       &.new {
         font-size: 24px;
+      }
+      &.selected {
+        background: darken($color: $bg, $amount: 30%);
+        color: white;
       }
     }
   }
