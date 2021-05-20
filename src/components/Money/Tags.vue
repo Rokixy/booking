@@ -61,6 +61,7 @@ export default {
   flex-direction: column-reverse;
   overflow: auto;
   > .current {
+    padding-top: 16px;
     display: flex;
     flex-wrap: wrap;
     margin-right: -5px;

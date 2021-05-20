@@ -24,5 +24,3 @@ export default {
   flex-direction: column;
 }
 </style>
-<style lang="scss" scoped>
-</style>
