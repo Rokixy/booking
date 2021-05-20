@@ -1,6 +1,6 @@
 <template>
-  <div class="nav-wrapper">
-    <div class="content">
+  <div class="wrapper" :class="classPrefix&& `${classPrefix}-wrapper`">
+    <div class="content" :class="classPrefix&& `${classPrefix}-content`">
       <slot />
     </div>
     <Nav></Nav>
@@ -10,13 +10,14 @@
 <script lang="ts">
 import Nav from "@/components/Nav.vue";
 export default {
+  props: ["classPrefix"],
   name: "Layout",
   components: { Nav },
 };
 </script>
 
 <style lang="scss" scoped>
-.nav-wrapper {
+.wrapper {
   display: flex;
   flex-direction: column;
   height: 100vh;
