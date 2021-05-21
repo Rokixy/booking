@@ -15,9 +15,16 @@
 </template>
 
 <script lang="ts">
-import { Vue } from "vue-class-component";
+import { Vue, Options } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
+@Options({
+  watch: {
+    selectedTag: function (value: string) {
+      this.$emit("update:value", value);
+    },
+  },
+})
 export default class Tags extends Vue {
   @Prop(Array) dataSource: string[] | undefined;
   selectedTag = "";

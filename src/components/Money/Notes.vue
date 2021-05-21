@@ -8,8 +8,15 @@
 </template>
 
 <script lang="ts">
-import { Vue } from "vue-class-component";
+import { Vue, Options } from "vue-class-component";
 
+@Options({
+  watch: {
+    value: function (value: string) {
+      this.$emit("update:value", value);
+    },
+  },
+})
 export default class Notes extends Vue {
   value = "";
 }
