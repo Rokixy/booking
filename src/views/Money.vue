@@ -3,7 +3,7 @@
     <Types v-model:value="this.record.type" />
     <Tags v-model:data-source="tags" @update:value="onSelectTag" />
     <Notes @update:value="onUpdateNote" />
-    <NumberPad @update:value="onUpdateAmount" />
+    <NumberPad @update:value="onUpdateAmount" @submit="saveRecord" />
   </Layout>
 </template>
 
@@ -19,9 +19,18 @@ type Record = {
   note: string;
   type: string;
   amount: number;
+  createdAt?: Date;
 };
 @Options({
   components: { NumberPad, Notes, Types, Tags },
+  watch: {
+    records: {
+      handler(value: Record[]) {
+        window.localStorage.setItem("records", JSON.stringify(value));
+      },
+      deep: true,
+    },
+  },
 })
 export default class Money extends Vue {
   tags = ["衣", "食", "住", "行"];
@@ -31,6 +40,10 @@ export default class Money extends Vue {
     type: "-",
     amount: 0,
   };
+  records: Record[] = JSON.parse(
+    window.localStorage.getItem("records") || "[]"
+  );
+
   onSelectTag(value: string) {
     this.record.tag = value;
   }
@@ -39,6 +52,11 @@ export default class Money extends Vue {
   }
   onUpdateAmount(value: string) {
     this.record.amount = parseFloat(value);
+  }
+  saveRecord(value: string) {
+    const newRecord: Record = JSON.parse(JSON.stringify(this.record));
+    newRecord.createdAt = new Date();
+    this.records.push(newRecord);
   }
 }
 </script>
