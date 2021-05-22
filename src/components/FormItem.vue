@@ -2,7 +2,12 @@
   <div>
     <label class="formItem">
       <span class="name">{{ fieldName }}</span>
-      <input type="text" v-model="value" :placeholder="placeholder" />
+      <input
+        type="text"
+        :value="value"
+        @change="onValueChanged($event.target.value)"
+        :placeholder="placeholder"
+      />
     </label>
   </div>
 </template>
@@ -17,15 +22,15 @@ import { Vue, Options } from "vue-class-component";
       required: true,
     },
     placeholder: String,
-  },
-  watch: {
-    value: function (value: string) {
-      this.$emit("update:value", value);
+    value: {
+      default: "",
     },
   },
 })
 export default class FormItem extends Vue {
-  value = "";
+  onValueChanged(value: string) {
+    this.$emit("update:value", value);
+  }
 }
 </script>
 <style lang="scss" scoped>
