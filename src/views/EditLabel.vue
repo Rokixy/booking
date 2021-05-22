@@ -1,10 +1,23 @@
 <template>
-  <Layout> 编辑标签 </Layout>
+  <Layout>
+    <div>
+      <Icon name="left" />
+      <span>编辑标签</span>
+    </div>
+    <FormItem :fieldName="'标签名'" :placeholder="'在这里输入标签名'" />
+    <Button>删除标签</Button>
+  </Layout>
 </template>
 
 <script lang="ts">
+import { Vue, Options } from "vue-class-component";
 import tagsModel from "@/models/tagsModel";
-import { Vue } from "vue-class-component";
+import FormItem from "@/components/FormItem.vue";
+import Button from "@/components/Button.vue";
+
+@Options({
+  components: { FormItem, Button },
+})
 export default class EditLabel extends Vue {
   created() {
     const id = this.$route.params.id;

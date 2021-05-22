@@ -2,7 +2,11 @@
   <Layout class-prefix="layout">
     <Types v-model:value="this.record.type" />
     <Tags v-model:data-source="tags" @update:value="onSelectTag" />
-    <Notes @update:value="onUpdateNote" />
+    <FormItem
+      :fieldName="'备注'"
+      :placeholder="'在这里输入备注'"
+      @update:value="onUpdateNote"
+    />
     <NumberPad @update:value="onUpdateAmount" @submit="saveRecord" />
   </Layout>
 </template>
@@ -10,7 +14,7 @@
 <script lang="ts">
 import { Vue, Options } from "vue-class-component";
 import NumberPad from "@/components/Money/NumberPad.vue";
-import Notes from "@/components/Money/Notes.vue";
+import FormItem from "@/components/FormItem.vue";
 import Types from "@/components/Money/Types.vue";
 import Tags from "@/components/Money/Tags.vue";
 import recordsModel from "@/models/recordsModel";
@@ -20,7 +24,7 @@ const recordsList: RecordItem[] = recordsModel.fetch();
 const tagsList = tagsModel.fetch();
 
 @Options({
-  components: { NumberPad, Notes, Types, Tags },
+  components: { NumberPad, FormItem, Types, Tags },
   watch: {
     records: {
       handler(value: RecordItem[]) {

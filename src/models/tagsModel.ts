@@ -10,7 +10,7 @@ type TagsModel = {
     data: Tag[];
     fetch: () => Tag[];
     save: () => void;
-    create: (name: string) => 'success' | 'duplicated' | 'empty';
+    create: (name: string) => 'success' | 'duplicated';
 }
 
 const tagsModel: TagsModel = {
@@ -26,8 +26,6 @@ const tagsModel: TagsModel = {
         const names = this.data.map(item => item.name);
         if (names.indexOf(name) >= 0) {
             return 'duplicated';
-        } else if (name.length === 0) {
-            return 'empty';
         }
         this.data.push({ id: name, name: name });
         this.save();

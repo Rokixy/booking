@@ -12,31 +12,34 @@
       </router-link>
     </div>
     <div class="createTag-wrapper">
-      <button class="createTag" @click="createTag">新建标签</button>
+      <Button class="createTag" @click="createTag">创建标签</Button>
     </div>
   </Layout>
 </template>
 
 <script lang="ts">
-import { Vue } from "vue-class-component";
+import { Vue, Options } from "vue-class-component";
 import tagsModel from "@/models/tagsModel";
+import Button from "@/components/Button.vue";
 
 tagsModel.fetch();
+
+@Options({
+  components: { Button },
+})
 export default class Lables extends Vue {
   tags = tagsModel.data;
 
   createTag() {
-    console.log(this.tags === tagsModel.data);
     const name = window.prompt("请输入标签名");
-    const result = tagsModel.create(name || "");
-    if (result === "duplicated") {
-      window.alert("标签名已存在");
-    } else if (result === "empty") {
-      window.alert("标签名不能为空");
-    } else if (result === "success") {
-      window.alert("添加成功");
+    if (name) {
+      const result = tagsModel.create(name || "");
+      if (result === "duplicated") {
+        window.alert("标签名已存在");
+      } else if (result === "success") {
+        window.alert("添加成功");
+      }
     }
-    console.log(this.tags === tagsModel.data);
   }
 }
 </script>
@@ -60,17 +63,9 @@ export default class Lables extends Vue {
     }
   }
 }
-.createTag {
-  background: #767676;
-  color: white;
-  border-radius: 4px;
-  border: none;
-  height: 40px;
-  padding: 0 16px;
-  &-wrapper {
-    text-align: center;
-    padding: 16px;
-    margin-top: 28px;
-  }
+.createTag-wrapper {
+  text-align: center;
+  padding: 16px;
+  margin-top: 28px;
 }
 </style>
