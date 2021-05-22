@@ -1,12 +1,12 @@
 <template>
   <Layout class-prefix="layout">
     <Types v-model:value="this.record.type" />
-    <Tags v-model:data-source="tags" @update:value="onSelectTag" />
     <FormItem
       :fieldName="'备注'"
       :placeholder="'在这里输入备注'"
       @update:value="onUpdateNote"
     />
+    <Tags v-model:data-source="tags" @update:value="onSelectTag" />
     <NumberPad @update:value="onUpdateAmount" @submit="saveRecord" />
   </Layout>
 </template>
