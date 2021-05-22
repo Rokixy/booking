@@ -26,7 +26,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Statistics
   },
   {
-    path: '/labels/edit',
+    path: '/labels/edit/:id',
     name: 'EditLabel',
     component: EditLabel
   },
