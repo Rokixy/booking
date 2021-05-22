@@ -1,16 +1,16 @@
 <template>
   <nav>
-    <router-link to="/labels" class="item" active-class="selected">
+    <router-link :to="{ path: '/labels' }" class="item">
       <Icon name="label" />
-      标签
+      <span>标签</span>
     </router-link>
-    <router-link to="/money" class="item" active-class="selected">
+    <router-link :to="{ path: '/money' }" class="item">
       <Icon name="money" />
-      记账
+      <span>记账</span>
     </router-link>
-    <router-link to="/statistics" class="item" active-class="selected">
+    <router-link :to="{ path: '/statistics' }" class="item">
       <Icon name="statistic" />
-      统计
+      <span>统计</span>
     </router-link>
   </nav>
 </template>

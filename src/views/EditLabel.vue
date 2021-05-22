@@ -1,5 +1,5 @@
 <template>
-  <Layout></Layout>
+  <Layout> 编辑标签 </Layout>
 </template>
 
 <script lang="ts">
