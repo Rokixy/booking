@@ -3,11 +3,11 @@
     <ul class="current">
       <li
         v-for="tag in dataSource"
-        :key="tag"
+        :key="tag.id"
         :class="{ selected: tag === selectedTag }"
         @click="select(tag)"
       >
-        {{ tag }}
+        {{ tag.name }}
       </li>
       <li class="new" @click="create">+</li>
     </ul>

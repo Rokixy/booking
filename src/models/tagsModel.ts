@@ -2,9 +2,13 @@ import { reactive } from 'vue'
 
 const localStorageKeyName = 'tags';
 
+type Tag = {
+    id: string;
+    name: string;
+}
 type TagsModel = {
-    data: string[];
-    fetch: () => string[];
+    data: Tag[];
+    fetch: () => Tag[];
     save: () => void;
     create: (name: string) => 'success' | 'duplicated' | 'empty';
 }
@@ -19,13 +23,13 @@ const tagsModel: TagsModel = {
         window.localStorage.setItem(localStorageKeyName, JSON.stringify(this.data));
     },
     create(name) {
-        console.log('name: ' + name)
-        if (this.data.indexOf(name) >= 0) {
+        const names = this.data.map(item => item.name);
+        if (names.indexOf(name) >= 0) {
             return 'duplicated';
         } else if (name.length === 0) {
             return 'empty';
         }
-        this.data.push(name);
+        this.data.push({ id: name, name: name });
         this.save();
         return 'success';
     }
