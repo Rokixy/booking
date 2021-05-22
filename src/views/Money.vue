@@ -13,20 +13,16 @@ import NumberPad from "@/components/Money/NumberPad.vue";
 import Notes from "@/components/Money/Notes.vue";
 import Types from "@/components/Money/Types.vue";
 import Tags from "@/components/Money/Tags.vue";
+import model from "@/model";
 
-type Record = {
-  tag: string;
-  note: string;
-  type: string;
-  amount: number;
-  createdAt?: Date;
-};
+const records: RecordItem[] = model.fetch();
+
 @Options({
   components: { NumberPad, Notes, Types, Tags },
   watch: {
     records: {
-      handler(value: Record[]) {
-        window.localStorage.setItem("records", JSON.stringify(value));
+      handler(value: RecordItem[]) {
+        model.save(value);
       },
       deep: true,
     },
@@ -34,15 +30,13 @@ type Record = {
 })
 export default class Money extends Vue {
   tags = ["衣", "食", "住", "行"];
-  record: Record = {
+  record: RecordItem = {
     tag: "",
     note: "",
     type: "-",
     amount: 0,
   };
-  records: Record[] = JSON.parse(
-    window.localStorage.getItem("records") || "[]"
-  );
+  records: RecordItem[] = records;
 
   onSelectTag(value: string) {
     this.record.tag = value;
@@ -53,8 +47,8 @@ export default class Money extends Vue {
   onUpdateAmount(value: string) {
     this.record.amount = parseFloat(value);
   }
-  saveRecord(value: string) {
-    const newRecord: Record = JSON.parse(JSON.stringify(this.record));
+  saveRecord() {
+    const newRecord: RecordItem = model.clone(this.record);
     newRecord.createdAt = new Date();
     this.records.push(newRecord);
   }
