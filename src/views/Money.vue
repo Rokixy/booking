@@ -13,30 +13,32 @@ import NumberPad from "@/components/Money/NumberPad.vue";
 import Notes from "@/components/Money/Notes.vue";
 import Types from "@/components/Money/Types.vue";
 import Tags from "@/components/Money/Tags.vue";
-import model from "@/model";
+import recordsModel from "@/models/recordsModel";
+import tagsModel from "@/models/tagsModel";
 
-const records: RecordItem[] = model.fetch();
+const recordsList: RecordItem[] = recordsModel.fetch();
+const tagsList = tagsModel.fetch();
 
 @Options({
   components: { NumberPad, Notes, Types, Tags },
   watch: {
     records: {
       handler(value: RecordItem[]) {
-        model.save(value);
+        recordsModel.save(value);
       },
       deep: true,
     },
   },
 })
 export default class Money extends Vue {
-  tags = ["衣", "食", "住", "行"];
+  tags = tagsList;
   record: RecordItem = {
     tag: "",
     note: "",
     type: "-",
     amount: 0,
   };
-  records: RecordItem[] = records;
+  records: RecordItem[] = recordsList;
 
   onSelectTag(value: string) {
     this.record.tag = value;
@@ -48,7 +50,7 @@ export default class Money extends Vue {
     this.record.amount = parseFloat(value);
   }
   saveRecord() {
-    const newRecord: RecordItem = model.clone(this.record);
+    const newRecord: RecordItem = recordsModel.clone(this.record);
     newRecord.createdAt = new Date();
     this.records.push(newRecord);
   }
