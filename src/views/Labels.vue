@@ -33,12 +33,7 @@ export default class Lables extends Vue {
   createTag() {
     const name = window.prompt("请输入标签名");
     if (name) {
-      const result = tagsModel.create(name || "");
-      if (result === "duplicated") {
-        window.alert("标签名已存在");
-      } else if (result === "success") {
-        window.alert("添加成功");
-      }
+      window.createTag(name);
     }
   }
 }
