@@ -17,23 +17,24 @@ import NumberPad from "@/components/Money/NumberPad.vue";
 import FormItem from "@/components/FormItem.vue";
 import Types from "@/components/Money/Types.vue";
 import Tags from "@/components/Money/Tags.vue";
-import store from "@/store/index2";
+import store from "@/store/index";
 
 @Options({
   components: { NumberPad, FormItem, Types, Tags },
-  computed: {
-    records() {
-      return store.recordList;
-    },
-  },
 })
 export default class Money extends Vue {
+  created() {
+    store.commit("fetchRecords");
+  }
   record: RecordItem = {
     tag: "",
     note: "",
     type: "-",
     amount: 0,
   };
+  get records() {
+    return store.state.recordList;
+  }
 
   onSelectTag(value: string) {
     this.record.tag = value;
@@ -49,7 +50,7 @@ export default class Money extends Vue {
       window.alert("没有东西被计入账本，请填写金额");
       return;
     }
-    store.createRecord(this.record);
+    store.commit("createRecord", this.record);
   }
 }
 </script>

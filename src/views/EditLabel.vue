@@ -23,28 +23,30 @@
 import { Vue, Options } from "vue-class-component";
 import FormItem from "@/components/FormItem.vue";
 import Button from "@/components/Button.vue";
-import store from "@/store/index2";
+import store from "@/store/index";
 
 @Options({
   components: { FormItem, Button },
 })
 export default class EditLabel extends Vue {
-  tag?: Tag = undefined;
-
+  get tag() {
+    return store.state.currentTag;
+  }
   created() {
-    this.tag = store.findTag(this.$route.params.id as string);
+    store.commit("setCurrentTag", this.$route.params.id as string);
     if (!this.tag) {
       this.$router.replace("/404");
     }
   }
   update(name: string) {
     if (this.tag) {
-      store.updateTag(this.tag.id, name);
+      store.commit("updateTag", { id: this.tag.id, name });
     }
   }
   remove() {
     if (this.tag) {
-      if (store.removeTag(this.tag.id)) {
+      store.commit("removeTag", this.tag.id);
+      if (store.state.currentTag) {
         this.$router.back();
       }
     }

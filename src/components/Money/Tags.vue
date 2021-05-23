@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { Vue, Options } from "vue-class-component";
-import store from "@/store/index2";
+import store from "@/store/index";
 
 @Options({
   watch: {
@@ -26,8 +26,13 @@ import store from "@/store/index2";
   },
 })
 export default class Tags extends Vue {
-  tagList = store.tagList;
+  created() {
+    store.commit("fetchTags");
+  }
   selectedTag = "";
+  get tagList() {
+    return store.state.tagList;
+  }
   select(tag: string) {
     if (tag === this.selectedTag) {
       return;
@@ -38,7 +43,7 @@ export default class Tags extends Vue {
   create() {
     const name = window.prompt("请输入标签名");
     if (name) {
-      store.createTag(name);
+      store.commit("createTag", name);
     }
   }
 }

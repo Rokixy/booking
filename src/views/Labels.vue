@@ -20,21 +20,22 @@
 <script lang="ts">
 import { Vue, Options } from "vue-class-component";
 import Button from "@/components/Button.vue";
-import store from "@/store/index2";
+import store from "@/store/index";
 
 @Options({
   components: { Button },
-  computed: {
-    tags() {
-      return store.tagList;
-    },
-  },
 })
 export default class Lables extends Vue {
+  created() {
+    store.commit("fetchTags");
+  }
+  get tags() {
+    return store.state.tagList;
+  }
   createTag() {
     const name = window.prompt("请输入标签名");
     if (name) {
-      store.createTag(name);
+      store.commit("createTag", name);
     }
   }
 }
