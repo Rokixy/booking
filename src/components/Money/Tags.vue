@@ -17,7 +17,6 @@
 <script lang="ts">
 import { Vue, Options } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
-import createId from "@/lib/idCreator";
 
 @Options({
   watch: {
@@ -37,19 +36,7 @@ export default class Tags extends Vue {
     }
   }
   create() {
-    const name = window.prompt("请输入标签名");
-    if (name === "") {
-      window.alert("标签名不能为空");
-    } else if (this.dataSource) {
-      if (this.dataSource?.indexOf(name as string) >= 0) {
-        window.alert("此标签名已存在");
-      } else {
-        this.$emit("update:dataSource", [
-          ...this.dataSource,
-          { id: createId(), name },
-        ]);
-      }
-    }
+    this.$emit("update:dataSource");
   }
 }
 </script>
