@@ -1,13 +1,19 @@
+import { reactive } from 'vue';
+import clone from "@/lib/clone"
 const localStorageKeyName = 'records';
 const recordsModel = {
-    clone(data: RecordItem | RecordItem[]) {
-        return JSON.parse(JSON.stringify(data))
-    },
+    data: [] as RecordItem[],
     fetch() {
-        return JSON.parse(window.localStorage.getItem(localStorageKeyName) || '[]') as RecordItem[];
+        this.data = reactive(JSON.parse(window.localStorage.getItem(localStorageKeyName) || '[]') as RecordItem[]);
+        return this.data;
     },
-    save(data: RecordItem[]) {
-        window.localStorage.setItem(localStorageKeyName, JSON.stringify(data));
+    create(record: RecordItem) {
+        const newRecord: RecordItem = clone(record);
+        newRecord.createdAt = new Date();
+        this.data.push(newRecord);
+    },
+    save() {
+        window.localStorage.setItem(localStorageKeyName, JSON.stringify(this.data));
     }
 }
 

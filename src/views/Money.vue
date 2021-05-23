@@ -27,15 +27,14 @@ const tagsList = tagsModel.fetch();
   components: { NumberPad, FormItem, Types, Tags },
   watch: {
     records: {
-      handler(value: RecordItem[]) {
-        recordsModel.save(value);
+      handler() {
+        recordsModel.save();
       },
-      deep: true,
     },
   },
 })
 export default class Money extends Vue {
-  tags = tagsList;
+  tags = window.tagList;
   record: RecordItem = {
     tag: "",
     note: "",
@@ -54,9 +53,7 @@ export default class Money extends Vue {
     this.record.amount = parseFloat(value);
   }
   saveRecord() {
-    const newRecord: RecordItem = recordsModel.clone(this.record);
-    newRecord.createdAt = new Date();
-    this.records.push(newRecord);
+    recordsModel.create(this.record);
   }
 }
 </script>

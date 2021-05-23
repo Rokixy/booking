@@ -17,6 +17,7 @@
 <script lang="ts">
 import { Vue, Options } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
+import createId from "@/lib/idCreator";
 
 @Options({
   watch: {
@@ -43,7 +44,10 @@ export default class Tags extends Vue {
       if (this.dataSource?.indexOf(name as string) >= 0) {
         window.alert("此标签名已存在");
       } else {
-        this.$emit("update:dataSource", [...this.dataSource, name]);
+        this.$emit("update:dataSource", [
+          ...this.dataSource,
+          { id: createId(), name },
+        ]);
       }
     }
   }
