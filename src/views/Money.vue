@@ -18,10 +18,8 @@ import FormItem from "@/components/FormItem.vue";
 import Types from "@/components/Money/Types.vue";
 import Tags from "@/components/Money/Tags.vue";
 import recordsModel from "@/models/recordsModel";
-import tagsModel from "@/models/tagsModel";
 
 const recordsList: RecordItem[] = recordsModel.fetch();
-const tagsList = tagsModel.fetch();
 
 @Options({
   components: { NumberPad, FormItem, Types, Tags },

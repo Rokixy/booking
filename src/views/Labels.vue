@@ -19,10 +19,7 @@
 
 <script lang="ts">
 import { Vue, Options } from "vue-class-component";
-import tagsModel from "@/models/tagsModel";
 import Button from "@/components/Button.vue";
-
-tagsModel.fetch();
 
 @Options({
   components: { Button },

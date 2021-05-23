@@ -16,5 +16,14 @@ window.createTag = (name: string) => {
         window.alert("添加成功");
     }
 }
+window.removeTag = (id: string) => {
+    return tagsModel.remove(id);
+}
+window.updateTag = (id: string, name: string) => {
+    return tagsModel.update(id, name);
+}
+window.findTag = (id: string) => {
+    return window.tagList.filter((t) => t.id === id)[0];
+}
 
 createApp(App).use(store).use(router).component('Layout', Layout).component('Icon', Icon).mount('#app')
