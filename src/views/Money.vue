@@ -6,11 +6,7 @@
       :placeholder="'在这里输入备注'"
       @update:value="onUpdateNote"
     />
-    <Tags
-      :data-source="tags"
-      @update:dataSource="createTag"
-      @update:value="onSelectTag"
-    />
+    <Tags @update:value="onSelectTag" />
     <NumberPad @update:value="onUpdateAmount" @submit="saveRecord" />
   </Layout>
 </template>
@@ -25,16 +21,19 @@ import store from "@/store/index2";
 
 @Options({
   components: { NumberPad, FormItem, Types, Tags },
+  computed: {
+    records() {
+      return store.recordList;
+    },
+  },
 })
 export default class Money extends Vue {
-  tags = store.tagList;
   record: RecordItem = {
     tag: "",
     note: "",
     type: "-",
     amount: 0,
   };
-  records = store.recordList;
 
   onSelectTag(value: string) {
     this.record.tag = value;
@@ -46,13 +45,11 @@ export default class Money extends Vue {
     this.record.amount = parseFloat(value);
   }
   saveRecord() {
-    store.createRecord(this.record);
-  }
-  createTag() {
-    const name = window.prompt("请输入标签名");
-    if (name) {
-      store.createTag(name);
+    if (this.record.amount === 0) {
+      window.alert("没有东西被计入账本，请填写金额");
+      return;
     }
+    store.createRecord(this.record);
   }
 }
 </script>

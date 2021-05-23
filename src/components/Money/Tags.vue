@@ -2,7 +2,7 @@
   <div class="tags">
     <ul class="current">
       <li
-        v-for="tag in dataSource"
+        v-for="tag in tagList"
         :key="tag.id"
         :class="{ selected: tag === selectedTag }"
         @click="select(tag)"
@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { Vue, Options } from "vue-class-component";
-import { Prop } from "vue-property-decorator";
+import store from "@/store/index2";
 
 @Options({
   watch: {
@@ -26,7 +26,7 @@ import { Prop } from "vue-property-decorator";
   },
 })
 export default class Tags extends Vue {
-  @Prop(Array) dataSource: string[] | undefined;
+  tagList = store.tagList;
   selectedTag = "";
   select(tag: string) {
     if (tag === this.selectedTag) {
@@ -36,7 +36,10 @@ export default class Tags extends Vue {
     }
   }
   create() {
-    this.$emit("update:dataSource");
+    const name = window.prompt("请输入标签名");
+    if (name) {
+      store.createTag(name);
+    }
   }
 }
 </script>

@@ -24,10 +24,13 @@ import store from "@/store/index2";
 
 @Options({
   components: { Button },
+  computed: {
+    tags() {
+      return store.tagList;
+    },
+  },
 })
 export default class Lables extends Vue {
-  tags = store.tagList;
-
   createTag() {
     const name = window.prompt("请输入标签名");
     if (name) {
