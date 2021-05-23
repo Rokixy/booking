@@ -19,17 +19,8 @@ import Types from "@/components/Money/Types.vue";
 import Tags from "@/components/Money/Tags.vue";
 import recordsModel from "@/models/recordsModel";
 
-const recordsList: RecordItem[] = recordsModel.fetch();
-
 @Options({
   components: { NumberPad, FormItem, Types, Tags },
-  watch: {
-    records: {
-      handler() {
-        recordsModel.save();
-      },
-    },
-  },
 })
 export default class Money extends Vue {
   tags = window.tagList;
@@ -39,7 +30,7 @@ export default class Money extends Vue {
     type: "-",
     amount: 0,
   };
-  records: RecordItem[] = recordsList;
+  records = window.recordList;
 
   onSelectTag(value: string) {
     this.record.tag = value;
@@ -51,7 +42,7 @@ export default class Money extends Vue {
     this.record.amount = parseFloat(value);
   }
   saveRecord() {
-    recordsModel.create(this.record);
+    window.createRecord(this.record)
   }
 }
 </script>

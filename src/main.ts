@@ -6,7 +6,15 @@ import store from './store'
 import Layout from '@/components/Layout.vue'
 import Icon from '@/components/Icon.vue'
 import tagsModel from './models/tagsModel'
+import recordsModel from './models/recordsModel'
 
+// record store
+window.recordList = recordsModel.fetch()
+window.createRecord = (record: RecordItem) => {
+    recordsModel.create(record);
+}
+
+// tag store
 window.tagList = tagsModel.fetch()
 window.createTag = (name: string) => {
     const result = tagsModel.create(name || "");
