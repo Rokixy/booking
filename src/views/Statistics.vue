@@ -11,18 +11,8 @@
       v-model:value="interval"
     />
     <ol class="records">
-      <li v-for="(group, index) in result" :key="index">
-        <h3 class="title">{{ group.title }}</h3>
-        <ol>
-          <li v-for="item in group.items" :key="item.id" class="record">
-            <span>{{ item.tag.name || "无" }}</span>
-            <span class="note">{{ item.note }}</span>
-            <span>￥{{ item.amount }}</span>
-          </li>
-        </ol>
-      </li>
-      <li v-for="(group, index) in result" :key="index">
-        <h3 class="title">{{ group.title }}</h3>
+      <li v-for="(group, index) in groupedList" :key="index">
+        <h3 class="title">{{ beautify(group.title) }}</h3>
         <ol>
           <li v-for="item in group.items" :key="item.id" class="record">
             <span>{{ item.tag.name || "无" }}</span>
@@ -41,6 +31,8 @@ import Tabs from "@/components/Tabs.vue";
 import intervalList from "@/constants/intervalList";
 import recordTypeList from "@/constants/recordTypeList";
 import store from "@/store";
+import dayjs from "dayjs";
+import clone from "@/lib/clone";
 
 @Options({
   components: { Tabs },
@@ -52,22 +44,58 @@ export default class Statistics extends Vue {
   get recordList() {
     return store.state.recordList;
   }
-  get result() {
+  get groupedList() {
     const { recordList } = this;
-    type HashTabelValue = { title: string; items: RecordItem[] };
-    const hashTabel: { [key: string]: HashTabelValue } = {};
-    for (let i = 0; i < recordList.length; i++) {
-      const [date, time] = recordList[i].createdAt!.split("T");
-      hashTabel[date] = hashTabel[date] || { title: date, items: [] };
-      hashTabel[date].items.push(recordList[i]);
+    if (recordList.length === 0) {
+      return [];
     }
-    console.log(hashTabel);
-    return hashTabel;
+
+    const newList = clone(recordList).sort(
+      (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf()
+    );
+    const result = [
+      {
+        title: dayjs(newList[0].createdAt).format("YYYY-MM-DD"),
+        items: [newList[0]],
+      },
+    ];
+    for (let i = 0; i < newList.length; i++) {
+      const current = dayjs(newList[i].createdAt);
+      const last = result[result.length - 1];
+      if (dayjs(last.title).isSame(current, "day")) {
+        last.items.push(newList[i]);
+      } else {
+        result.push({
+          title: current.format("YYYY-MM-DD"),
+          items: [newList[i]],
+        });
+      }
+    }
+
+    return result;
   }
   type = "-";
   interval = "day";
   intervalList = intervalList;
   recordTypeList = recordTypeList;
+
+  beautify(str: string) {
+    const now = dayjs();
+    const createdAt = dayjs(str);
+    if (createdAt.isSame(now, "day")) {
+      return "今天";
+    } else if (createdAt.isSame(now.add(-1, "day"), "day")) {
+      return "昨天";
+    } else if (createdAt.isSame(now.add(-2, "day"), "day")) {
+      return "前天";
+    } else {
+      if (createdAt.isSame(now, "year")) {
+        return createdAt.format("M月D日");
+      } else {
+        return createdAt.format("YYYY年M月D日");
+      }
+    }
+  }
 }
 </script>
 
