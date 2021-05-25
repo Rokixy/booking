@@ -19,8 +19,8 @@ const store = createStore<State>({
       state.recordList = JSON.parse(window.localStorage.getItem('records') || '[]');
     },
     createRecord(state, record) {
-      const newRecord = clone(record);
-      newRecord.createdAt = new Date();
+      const newRecord: RecordItem = clone(record);
+      newRecord.createdAt = new Date().toISOString();
       state.recordList.push(newRecord);
       store.commit('saveRecords');
     },
