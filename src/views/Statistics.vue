@@ -5,14 +5,12 @@
       :dataSource="recordTypeList"
       v-model:value="type"
     />
-    <Tabs
-      :classPrefix="'interval'"
-      :dataSource="intervalList"
-      v-model:value="interval"
-    />
     <ol class="records">
       <li v-for="(group, index) in groupedList" :key="index">
-        <h3 class="title">{{ beautify(group.title) }}</h3>
+        <h3 class="title">
+          {{ beautify(group.title) }}
+          <span>￥{{ group.total }}</span>
+        </h3>
         <ol>
           <li v-for="item in group.items" :key="item.id" class="record">
             <span>{{ item.tag.name || "无" }}</span>
@@ -28,7 +26,6 @@
 <script lang="ts">
 import { Vue, Options } from "vue-class-component";
 import Tabs from "@/components/Tabs.vue";
-import intervalList from "@/constants/intervalList";
 import recordTypeList from "@/constants/recordTypeList";
 import store from "@/store";
 import dayjs from "dayjs";
@@ -50,23 +47,28 @@ export default class Statistics extends Vue {
       return [];
     }
 
-    const newList = clone(recordList).sort(
-      (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf()
-    );
+    const newList = clone(recordList)
+      .filter((r) => r.type === this.type)
+      .sort(
+        (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf()
+      );
     const result = [
       {
         title: dayjs(newList[0].createdAt).format("YYYY-MM-DD"),
+        total: newList[0].amount,
         items: [newList[0]],
       },
     ];
-    for (let i = 0; i < newList.length; i++) {
+    for (let i = 1; i < newList.length; i++) {
       const current = dayjs(newList[i].createdAt);
       const last = result[result.length - 1];
       if (dayjs(last.title).isSame(current, "day")) {
+        last.total += newList[i].amount;
         last.items.push(newList[i]);
       } else {
         result.push({
           title: current.format("YYYY-MM-DD"),
+          total: newList[i].amount,
           items: [newList[i]],
         });
       }
@@ -75,8 +77,6 @@ export default class Statistics extends Vue {
     return result;
   }
   type = "-";
-  interval = "day";
-  intervalList = intervalList;
   recordTypeList = recordTypeList;
 
   beautify(str: string) {
@@ -100,18 +100,15 @@ export default class Statistics extends Vue {
 </script>
 
 <style lang="scss" scoped>
-:deep(.type-tabs-item) {
-  background: white;
-  &.selected {
-    background: #c4c4c4;
-    &::after {
-      display: none;
-    }
-  }
-}
-:deep(.interval-tabs-item) {
-  height: 48px;
-}
+// :deep(.type-tabs-item) {
+//   background: white;
+//   &.selected {
+//     background: #c4c4c4;
+//     &::after {
+//       display: none;
+//     }
+//   }
+// }
 :deep(.layout-content) {
   display: flex;
   flex-direction: column;
