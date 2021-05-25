@@ -1,6 +1,6 @@
 <template>
   <Layout class-prefix="layout">
-    <Types v-model:value="this.record.type" />
+    <Tabs :dataSource="recordTypeList" v-model:value="record.type" />
     <FormItem
       :fieldName="'备注'"
       :placeholder="'在这里输入备注'"
@@ -15,14 +15,16 @@
 import { Vue, Options } from "vue-class-component";
 import NumberPad from "@/components/Money/NumberPad.vue";
 import FormItem from "@/components/FormItem.vue";
-import Types from "@/components/Money/Types.vue";
 import Tags from "@/components/Money/Tags.vue";
+import Tabs from "@/components/Tabs.vue";
 import store from "@/store/index";
+import recordTypeList from "@/constants/recordTypeList";
 
 @Options({
-  components: { NumberPad, FormItem, Types, Tags },
+  components: { NumberPad, FormItem, Tags, Tabs },
 })
 export default class Money extends Vue {
+  recordTypeList = recordTypeList;
   created() {
     store.commit("fetchRecords");
   }
