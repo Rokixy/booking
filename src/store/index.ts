@@ -5,6 +5,7 @@ import createId from "@/lib/idCreator"
 interface State {
   recordList: RecordItem[],
   tagList: Tag[],
+  createRecordError: Error | null,
   currentTag?: Tag,
 }
 
@@ -12,6 +13,7 @@ const store = createStore<State>({
   state: {
     recordList: [],
     tagList: [],
+    createRecordError: null,
     currentTag: undefined,
   },
   mutations: {
@@ -29,6 +31,12 @@ const store = createStore<State>({
     },
     fetchTags(state) {
       state.tagList = JSON.parse(window.localStorage.getItem('tags') || '[]');
+      if (!state.tagList || state.tagList.length === 0) {
+        store.commit('createTag', '衣');
+        store.commit('createTag', '食');
+        store.commit('createTag', '住');
+        store.commit('createTag', '行');
+      }
     },
     createTag(state, name) {
       const id = createId().toString()

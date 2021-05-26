@@ -4,7 +4,7 @@
     <FormItem
       :fieldName="'备注'"
       :placeholder="'在这里输入备注'"
-      @update:value="onUpdateNote"
+      v-model:value="record.note"
     />
     <Tags @update:value="onSelectTag" />
     <NumberPad @update:value="onUpdateAmount" @submit="saveRecord" />
@@ -51,8 +51,14 @@ export default class Money extends Vue {
     if (this.record.amount === 0) {
       window.alert("没有东西被计入账本，请填写金额");
       return;
+    } else if (!this.record.tag || this.record.tag.length === 0) {
+      return window.alert("请选择一个标签");
     }
     store.commit("createRecord", this.record);
+    if (store.state.createRecordError === null) {
+      window.alert("已保存");
+      this.record.note = "";
+    }
   }
 }
 </script>

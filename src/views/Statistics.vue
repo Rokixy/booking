@@ -5,7 +5,7 @@
       :dataSource="recordTypeList"
       v-model:value="type"
     />
-    <ol class="records">
+    <ol v-if="groupedList.length > 0" class="records">
       <li v-for="(group, index) in groupedList" :key="index">
         <h3 class="title">
           {{ beautify(group.title) }}
@@ -20,6 +20,7 @@
         </ol>
       </li>
     </ol>
+    <div v-else class="noResult">目前没有相关记录</div>
   </Layout>
 </template>
 
@@ -43,15 +44,15 @@ export default class Statistics extends Vue {
   }
   get groupedList() {
     const { recordList } = this;
-    if (recordList.length === 0) {
-      return [];
-    }
-
     const newList = clone(recordList)
       .filter((r) => r.type === this.type)
       .sort(
         (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf()
       );
+
+    if (newList.length === 0) {
+      return [];
+    }
     const result = [
       {
         title: dayjs(newList[0].createdAt).format("YYYY-MM-DD"),
@@ -100,15 +101,6 @@ export default class Statistics extends Vue {
 </script>
 
 <style lang="scss" scoped>
-// :deep(.type-tabs-item) {
-//   background: white;
-//   &.selected {
-//     background: #c4c4c4;
-//     &::after {
-//       display: none;
-//     }
-//   }
-// }
 :deep(.layout-content) {
   display: flex;
   flex-direction: column;
@@ -134,5 +126,9 @@ export default class Statistics extends Vue {
 }
 .records {
   overflow: auto;
+}
+.noResult {
+  padding: 16px;
+  text-align: center;
 }
 </style>
