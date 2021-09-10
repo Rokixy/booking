@@ -21,6 +21,7 @@
 import { Vue, Options } from "vue-class-component";
 import Button from "@/components/Button.vue";
 import store from "@/store/index";
+import createTagErrors from "@/constants/createTagErrors";
 
 @Options({
   components: { Button },
@@ -36,6 +37,11 @@ export default class Lables extends Vue {
     const name = window.prompt("请输入标签名");
     if (name) {
       store.commit("createTag", name);
+      if (store.state.createTagError) {
+        window.alert(
+          createTagErrors[store.state.createTagError.message] || "未知错误"
+        );
+      }
     }
   }
 }

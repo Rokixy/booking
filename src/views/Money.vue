@@ -52,7 +52,7 @@ export default class Money extends Vue {
       window.alert("没有东西被计入账本，请填写金额");
       return;
     } else if (!this.record.tag || this.record.tag.length === 0) {
-      return window.alert("请选择一个标签");
+      return window.alert("请选择一个标签，并重新填写金额");
     }
     store.commit("createRecord", this.record);
     if (store.state.createRecordError === null) {

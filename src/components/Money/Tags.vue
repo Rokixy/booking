@@ -17,6 +17,7 @@
 <script lang="ts">
 import { Vue, Options } from "vue-class-component";
 import store from "@/store/index";
+import createTagErrors from "@/constants/createTagErrors";
 
 @Options({
   watch: {
@@ -44,6 +45,11 @@ export default class Tags extends Vue {
     const name = window.prompt("请输入标签名");
     if (name) {
       store.commit("createTag", name);
+      if (store.state.createTagError) {
+        window.alert(
+          createTagErrors[store.state.createTagError.message] || "未知错误"
+        );
+      }
     }
   }
 }

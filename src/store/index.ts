@@ -6,6 +6,7 @@ interface State {
   recordList: RecordItem[],
   tagList: Tag[],
   createRecordError: Error | null,
+  createTagError: Error | null,
   currentTag?: Tag,
 }
 
@@ -14,6 +15,7 @@ const store = createStore<State>({
     recordList: [],
     tagList: [],
     createRecordError: null,
+    createTagError: null,
     currentTag: undefined,
   },
   mutations: {
@@ -39,16 +41,14 @@ const store = createStore<State>({
       }
     },
     createTag(state, name) {
-      const id = createId().toString()
+      state.createRecordError = null;
       const names = state.tagList.map((item) => item.name);
       if (names.indexOf(name) >= 0) {
-        window.alert("标签名已存在");
-        return 'duplicated';
+        state.createTagError = new Error('duplicated');
       } else {
+        const id = createId().toString()
         state.tagList.push({ id, name: name });
         store.commit('saveTags');
-        window.alert("添加成功");
-        return 'success';
       }
     },
     removeTag(state, id) {
